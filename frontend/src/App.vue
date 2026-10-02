@@ -1,20 +1,25 @@
 <template>
   <div id="app">
     <ParticleBackground />
-    <GlassNavbar />
-    <main class="main-content">
+    <GlassHeader />
+    <GlassSidebar />
+    <GlassMain>
       <router-view v-slot="{ Component }">
         <transition name="page" mode="out-in">
           <component :is="Component" />
         </transition>
       </router-view>
-    </main>
+    </GlassMain>
+    <GlassFooter />
   </div>
 </template>
 
 <script setup>
 import ParticleBackground from './components/ParticleBackground.vue'
-import GlassNavbar from './components/GlassNavbar.vue'
+import GlassHeader from './components/GlassHeader.vue'
+import GlassSidebar from './components/GlassSidebar.vue'
+import GlassMain from './components/GlassMain.vue'
+import GlassFooter from './components/GlassFooter.vue'
 </script>
 
 <style>
@@ -34,11 +39,8 @@ body {
 
 #app {
   min-height: 100vh;
-}
-
-.main-content {
-  padding-top: 80px;
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Page transitions */
