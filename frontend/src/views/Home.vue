@@ -2,55 +2,66 @@
   <div class="home">
     <section class="hero">
       <div class="hero-content">
-        <h1 class="hero-title">
-          <TypingText :text="title" :speed="80" />
-        </h1>
+        <h1 class="hero-title">Gossip Hub</h1>
         <p class="hero-subtitle">专属于你们的八卦社交平台</p>
         <div class="hero-actions">
-          <GlassButton variant="primary" @click="$router.push('/timeline')">
-            浏览时间线
-          </GlassButton>
-          <GlassButton variant="ghost" @click="$router.push('/post')">
-            发布八卦
-          </GlassButton>
+          <router-link to="/timeline" class="hero-button primary">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M10 2L12 8H18L13 12L15 18L10 14L5 18L7 12L2 8H8L10 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>浏览时间线</span>
+          </router-link>
+          <router-link to="/post" class="hero-button secondary">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M10 3V17M3 10H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <span>发布八卦</span>
+          </router-link>
         </div>
-      </div>
-      <div class="hero-visual">
-        <FloatingCards />
       </div>
     </section>
 
     <section class="features">
       <div class="features-grid">
-        <LiquidGlass v-for="feature in features" :key="feature.title" variant="card">
-          <div class="feature-card">
-            <div class="feature-icon">
-              <SVGMorph :shape="feature.shape" :size="60" :color1="feature.color1" :color2="feature.color2" />
-            </div>
-            <h3 class="feature-title">{{ feature.title }}</h3>
-            <p class="feature-desc">{{ feature.description }}</p>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M16 4C9 4 4 9 4 16C4 23 9 28 16 28C23 28 28 23 28 16C28 9 23 4 16 4Z" stroke="currentColor" stroke-width="2"/>
+              <path d="M10 14H22M10 18H18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
           </div>
-        </LiquidGlass>
-      </div>
-    </section>
-
-    <section class="stats">
-      <div class="stats-grid">
-        <div class="stat-item">
-          <div class="stat-value">1000+</div>
-          <div class="stat-label">匿名八卦</div>
+          <h3 class="feature-title">八卦爆料</h3>
+          <p class="feature-desc">匿名分享你知道的小道消息</p>
         </div>
-        <div class="stat-item">
-          <div class="stat-value">500+</div>
-          <div class="stat-label">CP配对</div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M16 26L6 16C3 13 3 8 6 5C9 2 13 2 16 5C19 2 23 2 26 5C29 8 29 13 26 16L16 26Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">CP配对</h3>
+          <p class="feature-desc">你觉得谁和谁最配？发起投票</p>
         </div>
-        <div class="stat-item">
-          <div class="stat-value">200+</div>
-          <div class="stat-label">关系图谱</div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <circle cx="8" cy="16" r="4" stroke="currentColor" stroke-width="2"/>
+              <circle cx="24" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+              <circle cx="24" cy="24" r="4" stroke="currentColor" stroke-width="2"/>
+              <path d="M11 14L20 10M11 18L20 22" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">关系图谱</h3>
+          <p class="feature-desc">可视化展示谁和谁的关系</p>
         </div>
-        <div class="stat-item">
-          <div class="stat-value">50+</div>
-          <div class="stat-label">八卦预测</div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M16 4L18 12H26L20 17L22 25L16 20L10 25L12 17L6 12H14L16 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">八卦预测</h3>
+          <p class="feature-desc">预测下一步会发生什么</p>
         </div>
       </div>
     </section>
@@ -58,44 +69,6 @@
 </template>
 
 <script setup>
-import TypingText from '../components/TypingText.vue'
-import GlassButton from '../components/GlassButton.vue'
-import LiquidGlass from '../components/LiquidGlass.vue'
-import SVGMorph from '../components/SVGMorph.vue'
-import FloatingCards from '../components/FloatingCards.vue'
-
-const title = 'Gossip Hub'
-
-const features = [
-  {
-    title: '八卦爆料',
-    description: '匿名分享你知道的小道消息，看看谁和谁在一起了',
-    shape: 'blob',
-    color1: '#667eea',
-    color2: '#764ba2'
-  },
-  {
-    title: 'CP配对',
-    description: '你觉得谁和谁最配？发起投票，看看大家怎么说',
-    shape: 'heart',
-    color1: '#f093fb',
-    color2: '#f5576c'
-  },
-  {
-    title: '关系图谱',
-    description: '可视化展示谁和谁的关系，一目了然',
-    shape: 'hexagon',
-    color1: '#4facfe',
-    color2: '#00f2fe'
-  },
-  {
-    title: '八卦预测',
-    description: '预测下一步会发生什么，押注你的判断',
-    shape: 'star',
-    color1: '#fa709a',
-    color2: '#fee140'
-  }
-]
 </script>
 
 <style scoped>
@@ -106,118 +79,120 @@ const features = [
 }
 
 .hero {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: center;
-  min-height: 70vh;
-  margin-bottom: 80px;
+  text-align: center;
+  padding: 80px 0;
 }
 
 .hero-title {
   font-size: 64px;
   font-weight: 800;
   color: white;
-  margin-bottom: 16px;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  min-height: 80px;
+  margin: 0 0 16px 0;
+  letter-spacing: -2px;
 }
 
 .hero-subtitle {
-  font-size: 24px;
-  color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 32px;
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 40px 0;
 }
 
 .hero-actions {
   display: flex;
   gap: 16px;
+  justify-content: center;
 }
 
-.hero-visual {
-  height: 400px;
+.hero-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.hero-button.primary {
+  background: white;
+  color: #667eea;
+}
+
+.hero-button.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.hero-button.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.hero-button.secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
 }
 
 .features {
-  margin-bottom: 80px;
+  padding: 40px 0;
 }
 
 .features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 24px;
-}
-
-.feature-card {
-  text-align: center;
-  padding: 20px;
-}
-
-.feature-icon {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 16px;
-}
-
-.feature-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 8px;
-}
-
-.feature-desc {
-  font-size: 14px;
-  color: #6b7280;
-  line-height: 1.6;
-}
-
-.stats {
-  margin-bottom: 80px;
-}
-
-.stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
 }
 
-.stat-item {
-  text-align: center;
-  padding: 32px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+.feature-card {
+  padding: 32px 24px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  text-align: center;
+  transition: all 0.3s ease;
 }
 
-.stat-value {
-  font-size: 48px;
-  font-weight: 800;
-  color: white;
-  margin-bottom: 8px;
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
 }
 
-.stat-label {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.7);
+.feature-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+}
+
+.feature-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+}
+
+.feature-desc {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
 }
 
 @media (max-width: 768px) {
-  .hero {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-
   .hero-title {
     font-size: 40px;
   }
 
-  .hero-actions {
-    justify-content: center;
-  }
-
-  .stats-grid {
+  .features-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }

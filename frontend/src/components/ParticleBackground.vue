@@ -4,106 +4,81 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import * as THREE from 'three'
 
 const canvasRef = ref(null)
-let scene, camera, renderer, particles, animationId
+let animationId = null
 
 onMounted(() => {
-  initThree()
-  animate()
-  window.addEventListener('resize', onWindowResize)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', onWindowResize)
-  cancelAnimationFrame(animationId)
-  if (renderer) {
-    renderer.dispose()
-  }
-})
-
-function initThree() {
   const canvas = canvasRef.value
-  const width = window.innerWidth
-  const height = window.innerHeight
+  const ctx = canvas.getContext('2d')
+  let width = window.innerWidth
+  let height = window.innerHeight
 
-  scene = new THREE.Scene()
-  camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000)
-  camera.position.z = 50
+  canvas.width = width
+  canvas.height = height
 
-  renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true })
-  renderer.setSize(width, height)
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+  const particles = []
+  const particleCount = 80
 
-  // Create particles
-  const geometry = new THREE.BufferGeometry()
-  const count = 2000
-  const positions = new Float32Array(count * 3)
-  const colors = new Float32Array(count * 3)
-  const sizes = new Float32Array(count)
-
-  for (let i = 0; i < count; i++) {
-    positions[i * 3] = (Math.random() - 0.5) * 100
-    positions[i * 3 + 1] = (Math.random() - 0.5) * 100
-    positions[i * 3 + 2] = (Math.random() - 0.5) * 100
-
-    colors[i * 3] = Math.random() * 0.5 + 0.5
-    colors[i * 3 + 1] = Math.random() * 0.5 + 0.5
-    colors[i * 3 + 2] = Math.random() * 0.5 + 0.5
-
-    sizes[i] = Math.random() * 2 + 0.5
+  for (let i = 0; i < particleCount; i++) {
+    particles.push({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      radius: Math.random() * 1.5 + 0.5,
+      opacity: Math.random() * 0.4 + 0.1,
+      hue: Math.random() * 60 + 220
+    })
   }
 
-  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
-  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
-  geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1))
+  function animate() {
+    ctx.clearRect(0, 0, width, height)
 
-  const material = new THREE.PointsMaterial({
-    size: 1.5,
-    vertexColors: true,
-    transparent: true,
-    opacity: 0.8,
-    sizeAttenuation: true,
+    particles.forEach((p, i) => {
+      p.x += p.vx
+      p.y += p.vy
+
+      if (p.x < 0 || p.x > width) p.vx *= -1
+      if (p.y < 0 || p.y > height) p.vy *= -1
+
+      ctx.beginPath()
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2)
+      ctx.fillStyle = `hsla(${p.hue}, 70%, 80%, ${p.opacity})`
+      ctx.fill()
+
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[j].x - p.x
+        const dy = particles[j].y - p.y
+        const dist = Math.sqrt(dx * dx + dy * dy)
+
+        if (dist < 120) {
+          ctx.beginPath()
+          ctx.moveTo(p.x, p.y)
+          ctx.lineTo(particles[j].x, particles[j].y)
+          ctx.strokeStyle = `hsla(230, 60%, 75%, ${0.08 * (1 - dist / 120)})`
+          ctx.lineWidth = 0.5
+          ctx.stroke()
+        }
+      }
+    })
+
+    animationId = requestAnimationFrame(animate)
+  }
+
+  animate()
+
+  window.addEventListener('resize', () => {
+    width = window.innerWidth
+    height = window.innerHeight
+    canvas.width = width
+    canvas.height = height
   })
 
-  particles = new THREE.Points(geometry, material)
-  scene.add(particles)
-
-  // Add ambient light
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
-  scene.add(ambientLight)
-
-  // Add point light
-  const pointLight = new THREE.PointLight(0xffffff, 1)
-  pointLight.position.set(10, 10, 10)
-  scene.add(pointLight)
-}
-
-function animate() {
-  animationId = requestAnimationFrame(animate)
-
-  if (particles) {
-    particles.rotation.x += 0.0003
-    particles.rotation.y += 0.0005
-
-    const positions = particles.geometry.attributes.position.array
-    for (let i = 0; i < positions.length; i += 3) {
-      positions[i + 1] += Math.sin(Date.now() * 0.001 + i) * 0.01
-    }
-    particles.geometry.attributes.position.needsUpdate = true
-  }
-
-  renderer.render(scene, camera)
-}
-
-function onWindowResize() {
-  const width = window.innerWidth
-  const height = window.innerHeight
-  camera.aspect = width / height
-  camera.updateProjectionMatrix()
-  renderer.setSize(width, height)
-}
+  onUnmounted(() => {
+    cancelAnimationFrame(animationId)
+  })
+})
 </script>
 
 <style scoped>
